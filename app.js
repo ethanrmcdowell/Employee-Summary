@@ -14,20 +14,38 @@ const render = require("./lib/htmlRenderer");
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
 
-let team = [];
+let employees = [];
 
 const managerQ = [{
     type: "input",
     name: "name",
-    message: "Please enter the manager's name."
+    message: "Please enter the manager's name.",
+    validate: (input) => {
+        if (/\d/.test(input) || input === ""){
+            return "Please enter this employee's name";
+        } else {
+        return true;
+        }}
 }, {
     type: "input",
     name: "id",
-    message: "Enter the manager's ID."
+    message: "Enter the manager's ID.",
+    validate: (input) => {
+        if (/\D/.test(input) || input === ""){
+            return "Please enter a number";
+        } else {
+            return true;
+        }}
 }, {
     type: "input",
     name: "email",
-    message: "Enter their e-mail address."
+    message: "Enter their e-mail address.",
+    validation: (input) => {
+        if (/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/.test(input)){
+            return true;
+        }
+        return "Please enter a valid e-mail address";
+        }
 }, {
     type: "input",
     name: "officeNumber",
@@ -76,12 +94,12 @@ const employeeQ = [{
 function init(){
     inquirer.prompt(managerQ)
     .then(managerStats => {
-        let teamManager = new Manager(managerStats.name, managerStats.id, managerStats.email, managerStats.officeNumber);
-        team.push(teamManager);
+        let newEmployee = new Manager(managerStats.name, managerStats.id, managerStats.email, managerStats.officeNumber);
+        employees.push(newEmployee);
         if(managerStats.addTeam === "Yes"){
             employeeList();
         } else{
-            console.log(team);
+            console.log(employees);
             createDoc();
         }
     });
@@ -91,15 +109,16 @@ function employeeList(){
     inquirer.prompt(employeeQ)
     .then(employeeStats => {
         if(employeeStats.role === "Intern"){
-            var newEmployee = new Intern(employeeStats.name, employeeStats.id, employeeStats.email, employeeStats.school);
+            let newEmployee = new Intern(employeeStats.name, employeeStats.id, employeeStats.email, employeeStats.school);
+            employees.push(newEmployee);
         } else {
-            var newEmployee = new Engineer(employeeStats.name, employeeStats.id, employeeStats.email, employeeStats.github);
+            let newEmployee = new Engineer(employeeStats.name, employeeStats.id, employeeStats.email, employeeStats.github);
+            employees.push(newEmployee);
         }
-        team.push(newEmployee);
         if(employeeStats.addTeam === "Yes"){
             employeeList();
         } else {
-            console.log(team);
+            console.log(employees);
             createDoc();
         }
     })
@@ -111,8 +130,6 @@ init();
 // above) and pass in an array containing all employee objects; the `render` function will
 // generate and return a block of HTML including templated divs for each employee!
 
-const template = render(team);
-
 // After you have your html, you're now ready to create an HTML file using the HTML
 // returned from the `render` function. Now write it to a file named `team.html` in the
 // `output` folder. You can use the variable `outputPath` above target this location.
@@ -120,58 +137,8 @@ const template = render(team);
 // does not.
 
 function createDoc(){
-    fs.writeFileSync(outputPath, template, function(err){
-        if (err) throw err;
-    });
-    for(employee of team){
-        if(employee.getRole() === "Manager"){
-            managerCard("manager", employee.name, employee.id, employee.email, employee.officeNumber);
-            console.log("Manager card created.");
-        } else if(employee.getRole() === "Engineer"){
-            engineerCard("engineer", employee.name, employee.id, employee.email, employee.github);
-            console.log("Engineer card created.");
-        } else if (employee.getRole() === "Intern"){
-            internCard("intern", employee.name, employee.id, employee.email, employee.school);
-            console.log("Intern card created.");
-        }
-    }
+    fs.writeFileSync(outputPath, render(employees), "utf-8");
     console.log("Success! Your page has been created.");
-}
-
-function managerCard(role, name, id, email, officeNumber){
-    let data = fs.readFileSync(outputPath, "utf8");
-    data = data.replace("{{ name }}", name);
-    data = data.replace("{{ role }}", role);
-    data = data.replace("{{ id }}", id);
-    data = data.replace("{{ email }}", email);
-    data = data.replace("{{ officeNumber }}", officeNumber);
-    fs.appendFileSync("./output/team.html", data, err => {
-        if (err) throw err;
-    });
-}
-
-function engineerCard(role, name, id, email, github){
-    let data = fs.readFileSync(outputPath, "utf8");
-    data = data.replace("{{ name }}", name);
-    data = data.replace("{{ role }}", role);
-    data = data.replace("{{ id }}", id);
-    data = data.replace("{{ email }}", email);
-    data = data.replace("{{ github }}", github);
-    fs.appendFileSync("./output/team.html", data, err => {
-        if (err) throw err;
-    });
-}
-
-function internCard(role, name, id, email, school){
-    let data = fs.readFileSync(outputPath, "utf8");
-    data = data.replace("{{ name }}", name);
-    data = data.replace("{{ role }}", role);
-    data = data.replace("{{ id }}", id);
-    data = data.replace("{{ email }}", email);
-    data = data.replace("{{ school }}", school);
-    fs.appendFileSync("./output/team.html", data, err => {
-        if (err) throw err;
-    });
 }
 
 // HINT: each employee type (manager, engineer, or intern) has slightly different
@@ -183,48 +150,3 @@ function internCard(role, name, id, email, school){
 // for further information. Be sure to test out each class and verify it generates an
 // object with the correct structure and methods. This structure will be crucial in order
 // for the provided `render` function to work! ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// while(repeat){
-//     const {role, name, email, id} = await inquirer.prompt(questions);
-//     if(role === Manager){
-//         const {officeNumber} = await inquirer.prompt(questions);
-//         employees.push(new Manager(name, email, id, officeNumber));
-//     } else if(role === Engineer){
-//         const {github} = await inquirer.prompt(questions);
-//         employees.push(new Engineer(name, email, id, github));
-//     } else {
-//         const {school} = await inquirer.prompt(questions);
-//         employees.push(new Intern(name, email, id, school));
-//     }
-//     const repeatQuestions = [{
-//         type: "confirm",
-//         name: "confirm",
-//         message: "Would you like to add additional employees?",
-//     }];
-//     const {confirm} = await inquirer.prompt(repeatQuestions);
-//     if(confirm === false){
-//         repeat = false;
-//     }
-// }
-// console.log(employees);
