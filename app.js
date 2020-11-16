@@ -25,6 +25,7 @@ const validateName = (input) => {
     return true;
     }
 }
+
 // validates input to ensure only numbers are enteres
 const validateId = (input) => {
     if (isNaN(input) || input === ""){
@@ -33,6 +34,7 @@ const validateId = (input) => {
         return true;
     }
 }
+
 // validates input to ensure that an e-mail was entered
 const validateEmail = (input) => {
     if (/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/.test(input)){
@@ -69,6 +71,7 @@ const managerQ = [{
     message: "Would you like to add team members?",
     choices: ["Yes", "No"]
 }]
+
 // constant holding the set of questions for additional employees - intern and engineer
 // uses when statement to ask specific questions based on the employee's role
 const employeeQ = [{
@@ -125,6 +128,7 @@ function init(){
         }
     });
 }
+
 // prompts the additional employee questions and creates a new Intern or Engineer based on the user input
 // and will add them to the team array, will loop back through questions if user chooses to do so, otherwise
 // will run the createDoc function. 
@@ -146,9 +150,12 @@ function employeeList(){
     })
 }
 
-init();
-
+// function to create the HTML document, calling the render function from htmlRenderer.js while passing
+// through the created employees information, then console logs a success message.
 function createDoc(){
     fs.writeFileSync(outputPath, render(employees), "utf-8");
     console.log("Success! Your page has been created.");
 }
+
+// calls init function to start the application
+init();
