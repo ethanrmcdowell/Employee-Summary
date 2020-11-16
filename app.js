@@ -80,6 +80,9 @@ function init(){
         team.push(teamManager);
         if(managerStats.addTeam === "Yes"){
             employeeList();
+        } else{
+            console.log(team);
+            createDoc();
         }
     });
 }
@@ -97,24 +100,79 @@ function employeeList(){
             employeeList();
         } else {
             console.log(team);
+            createDoc();
         }
     })
 }
 
 init();
 
-
-
-
 // After the user has input all employees desired, call the `render` function (required
 // above) and pass in an array containing all employee objects; the `render` function will
 // generate and return a block of HTML including templated divs for each employee!
+
+const template = render(team);
 
 // After you have your html, you're now ready to create an HTML file using the HTML
 // returned from the `render` function. Now write it to a file named `team.html` in the
 // `output` folder. You can use the variable `outputPath` above target this location.
 // Hint: you may need to check if the `output` folder exists and create it if it
 // does not.
+
+function createDoc(){
+    fs.writeFileSync(outputPath, template, function(err){
+        if (err) throw err;
+    });
+    for(employee of team){
+        if(employee.getRole() === "Manager"){
+            managerCard("manager", employee.name, employee.id, employee.email, employee.officeNumber);
+            console.log("Manager card created.");
+        } else if(employee.getRole() === "Engineer"){
+            engineerCard("engineer", employee.name, employee.id, employee.email, employee.github);
+            console.log("Engineer card created.");
+        } else if (employee.getRole() === "Intern"){
+            internCard("intern", employee.name, employee.id, employee.email, employee.school);
+            console.log("Intern card created.");
+        }
+    }
+    console.log("Success! Your page has been created.");
+}
+
+function managerCard(role, name, id, email, officeNumber){
+    let data = fs.readFileSync(outputPath, "utf8");
+    data = data.replace("{{ name }}", name);
+    data = data.replace("{{ role }}", role);
+    data = data.replace("{{ id }}", id);
+    data = data.replace("{{ email }}", email);
+    data = data.replace("{{ officeNumber }}", officeNumber);
+    fs.appendFileSync("./output/team.html", data, err => {
+        if (err) throw err;
+    });
+}
+
+function engineerCard(role, name, id, email, github){
+    let data = fs.readFileSync(outputPath, "utf8");
+    data = data.replace("{{ name }}", name);
+    data = data.replace("{{ role }}", role);
+    data = data.replace("{{ id }}", id);
+    data = data.replace("{{ email }}", email);
+    data = data.replace("{{ github }}", github);
+    fs.appendFileSync("./output/team.html", data, err => {
+        if (err) throw err;
+    });
+}
+
+function internCard(role, name, id, email, school){
+    let data = fs.readFileSync(outputPath, "utf8");
+    data = data.replace("{{ name }}", name);
+    data = data.replace("{{ role }}", role);
+    data = data.replace("{{ id }}", id);
+    data = data.replace("{{ email }}", email);
+    data = data.replace("{{ school }}", school);
+    fs.appendFileSync("./output/team.html", data, err => {
+        if (err) throw err;
+    });
+}
 
 // HINT: each employee type (manager, engineer, or intern) has slightly different
 // information; write your code to ask different questions via inquirer depending on
