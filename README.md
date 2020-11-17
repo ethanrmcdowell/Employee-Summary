@@ -3,7 +3,7 @@
   # **Employee Summary**
   
    This CLI application prompts users for information on management and employees for a team. The program then generates an HTML page displaying the information.
-   [Video Demo](https://youtu.be/sT9eBABQxXk)
+   [Video Demo](https://youtu.be/z1alCGoJjFs)
 
   ## TABLE OF CONTENTS
 
