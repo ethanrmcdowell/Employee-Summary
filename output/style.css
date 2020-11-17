@@ -1,0 +1,46 @@
+body {
+    background: #cfd3ce;
+}
+
+h1, h2, h3 {
+    font-family: 'Bebas Neue', cursive;
+}
+
+li {
+    font-family: 'Rubik', sans-serif;
+}
+
+.jumbotron {
+    background: #839b97;
+}
+
+.card-header {
+    background: #34626c;
+}
+
+.card-title {
+    color: #cfd3ce;
+    text-align: center;
+}
+
+.card-body {
+    background: #839b97;
+}
+
+.list-group-item {
+    background: #cfd3ce;
+}
+
+.text-center {
+    color: #34626c;
+    font-size: 3.9rem;
+}
+
+a {
+    color: #839b97;
+}
+
+a:hover {
+    color: #34626c;
+    text-decoration: line-through;
+}
