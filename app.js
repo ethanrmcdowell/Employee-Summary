@@ -17,7 +17,7 @@ ui.log.write("__________WELCOME TO THE TEAM CREATOR__________");
 let employees = [];
 
 // three constants which hold the logic for validating inquirer questions
-// validates input to ensure only letters were enteres
+// validates input using regular expression to ensure only letters were entered
 const validateName = (input) => {
     if (/\d/.test(input) || input === ""){
         return "Please enter a valid response using only letters.";
@@ -26,7 +26,7 @@ const validateName = (input) => {
     }
 }
 
-// validates input to ensure only numbers are enteres
+// validates input to ensure only numbers are entered using regular expression
 const validateId = (input) => {
     if (isNaN(input) || input === ""){
         return "Please enter a number.";
@@ -35,7 +35,7 @@ const validateId = (input) => {
     }
 }
 
-// validates input to ensure that an e-mail was entered
+// validates input to ensure that an e-mail was entered using regular expression
 const validateEmail = (input) => {
     if (/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/.test(input)){
         return true;
